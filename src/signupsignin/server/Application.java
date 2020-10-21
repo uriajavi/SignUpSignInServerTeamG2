@@ -9,7 +9,7 @@ package signupsignin.server;
  *
  * @author Mikel
  */
-public class SignUpSignInServer {
+public class Application {
 
     /**
      * @param args the command line arguments
