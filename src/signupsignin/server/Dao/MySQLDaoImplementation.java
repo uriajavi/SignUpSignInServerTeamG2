@@ -5,10 +5,23 @@
  */
 package signupsignin.server.Dao;
 
+import interfaces.Signable;
+import user.User;
+
 /**
  *
  * @author Mikel
  */
-public class MySQLDaoImplementation {
+public class MySQLDaoImplementation implements Signable {
+
+    @Override
+    public User signIn(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public User signUp(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
