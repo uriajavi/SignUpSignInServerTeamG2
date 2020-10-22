@@ -5,10 +5,23 @@
  */
 package signupsignin.server.Dao;
 
+import interfaces.Signable;
+
 /**
  *
  * @author Mikel
  */
 public class DaoFactory {
-    
+
+    private static final String MYSQL = "mysqñl";
+
+    public static Signable getSignable(String type) {
+        Signable signable = null;
+        switch (type) {
+            case MYSQL:
+                signable = new MySQLDaoImplementation();
+                break;
+        }
+        return signable;
+    }
 }
