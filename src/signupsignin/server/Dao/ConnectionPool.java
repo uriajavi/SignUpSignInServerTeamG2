@@ -6,10 +6,7 @@
 package signupsignin.server.Dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -19,19 +16,17 @@ import org.apache.commons.dbcp2.BasicDataSource;
  */
 public class ConnectionPool {
 
-    public ConnectionPool() {
-    }
-
     private static BasicDataSource ds = null;
 
     public static DataSource getDataSource() {
-        //Establecer valores
+        //FIXME: Valores establecidos a machete. Cambiar a archivo de propiedades.
         if (ds == null) {
             ds = new BasicDataSource();
-            ds.setDriverClassName("com.mysql.jdbc.Driver");
+            ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
             ds.setUsername("root");
-            ds.setPassword("root");
-            ds.setUrl("jdbc:mysql://localhost/saludodb?autoReconnect=true&useSSL=false");
+            ds.setPassword("");
+            ds.setUrl("jdbc:mysql://localhost:3306/saludodb?autoReconnect=true&useSSL=false");
+            //Establecer parametros adecuados
             ds.setMinIdle(1);
             ds.setMaxIdle(6);
             ds.setMaxTotal(10);
