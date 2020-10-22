@@ -18,26 +18,29 @@ import org.apache.commons.dbcp2.BasicDataSource;
  * @author Imanol
  */
 public class ConnectionPool {
-    private static BasicDataSource ds = null;
-    
-    public static DataSource getDataSource(){
-    
-        //Establecer valores
-    if(ds==null){
-        ds = new BasicDataSource();
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUsername("root");
-        ds.setPassword("");
-        ds.setUrl("jdbc:mysql://localhost:3306/test");
-        ds.setInitialSize(50);
-        ds.setMaxIdle(10);
-        ds.setMaxTotal(20);
-        ds.setMaxWaitMillis(5000);
+
+    public ConnectionPool() {
     }
-    return ds;
-}
-    
-    public static Connection getPool() throws SQLException{
+
+    private static BasicDataSource ds = null;
+
+    public static DataSource getDataSource() {
+        //Establecer valores
+        if (ds == null) {
+            ds = new BasicDataSource();
+            ds.setDriverClassName("com.mysql.jdbc.Driver");
+            ds.setUsername("root");
+            ds.setPassword("root");
+            ds.setUrl("jdbc:mysql://localhost/saludodb?autoReconnect=true&useSSL=false");
+            ds.setMinIdle(1);
+            ds.setMaxIdle(6);
+            ds.setMaxTotal(10);
+            ds.setMaxWaitMillis(4000);
+        }
+        return ds;
+    }
+
+    public static Connection getConnection() throws SQLException {
         return getDataSource().getConnection();
     }
 }
