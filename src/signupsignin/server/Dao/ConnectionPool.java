@@ -27,15 +27,13 @@ public class ConnectionPool {
             ds.setPassword("");
             ds.setUrl("jdbc:mysql://localhost:3306/saludodb?autoReconnect=true&useSSL=false");
             //Establecer parametros adecuados
-            ds.setMinIdle(1);
-            ds.setMaxIdle(6);
             ds.setMaxTotal(10);
-            ds.setMaxWaitMillis(4000);
+            ds.setMaxWaitMillis(3000);
         }
         return ds;
     }
 
-    public static Connection getConnection() throws SQLException {
+    public static synchronized Connection getConnection() throws SQLException {
         return getDataSource().getConnection();
     }
 }
