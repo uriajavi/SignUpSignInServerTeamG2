@@ -5,6 +5,8 @@
  */
 package signupsignin.server;
 
+import signupsignin.server.Dao.MySQLDaoImplementation;
+
 /**
  *
  * @author Mikel
@@ -15,7 +17,9 @@ public class Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        MySQLDaoImplementation prueba = new MySQLDaoImplementation();
+        prueba.doQuery();
+        
     }
     
 }
