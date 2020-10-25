@@ -25,7 +25,7 @@ public class ConnectionPool {
             ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
             ds.setUsername("root");
             ds.setPassword("");
-            ds.setUrl("jdbc:mysql://localhost:3306/saludodb?autoReconnect=true&useSSL=false");
+            ds.setUrl("jdbc:mysql://localhost:3306/signin_signup?autoReconnect=true&useSSL=false");
             //Establecer parametros adecuados
             ds.setMaxTotal(10);
             ds.setMaxWaitMillis(3000);

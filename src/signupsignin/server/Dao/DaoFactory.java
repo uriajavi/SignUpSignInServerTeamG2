@@ -19,7 +19,7 @@ public class DaoFactory {
         Signable signable = null;
         switch (type) {
             case MYSQL:
-                signable = new MySQLDaoImplementation();
+                signable = (Signable) new MySQLDaoImplementation();
                 break;
         }
         return signable;

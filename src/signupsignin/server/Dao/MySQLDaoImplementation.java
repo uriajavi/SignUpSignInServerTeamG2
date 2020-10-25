@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 /**
  *
  * @author Imanol
@@ -20,44 +19,41 @@ public class MySQLDaoImplementation {
     private PreparedStatement ps;
     private ResultSet rs;
     private Connection con;
-    
+
     public void doQuery() {
-
-        try {   
-
+        try {
             // Obtengo una conexión desde el pool de conexiones.
             con = ConnectionPool.getConnection();
- 
+
             //Establezco el preparedstatement y ejecuto la query. Preguntar ExecuteUpdate.
-            ps = con.prepareStatement("SELECT * FROM PAIS");
+            ps = con.prepareStatement("SELECT * FROM USER");
             rs = ps.executeQuery();
-            
+
             //Compruebo que está todo correcto en la terminal, y que la query funciona.
             while (rs.next()) {
-                System.out.println("Username: " + rs.getString("IDIOMA"));
+                System.out.println("Email: " + rs.getString("EMAIL"));
             }
-            
-            System.out.println("\n=====Releasing Connection Object To Pool=====\n");            
-        } catch(SQLException sqlException) {
+
+            System.out.println("\n=====Releasing Connection Object To Pool=====\n");
+        } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         } finally {
             try {
                 // Cerrar ResulSet
-                if(rs != null) {
+                if (rs != null) {
                     rs.close();
                 }
                 // Cerrar PreparedStatement
-                if(ps != null) {
+                if (ps != null) {
                     ps.close();
                 }
                 // Cerrar conexión recibida
-                if(con != null) {
+                if (con != null) {
                     con.close();
                 }
-            } catch(SQLException sqlException) {
+            } catch (SQLException sqlException) {
                 sqlException.printStackTrace();
             }
         }
     }
-
 }
