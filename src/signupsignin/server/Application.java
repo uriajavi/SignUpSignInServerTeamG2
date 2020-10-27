@@ -18,21 +18,49 @@ import signupsignin.server.Dao.MySQLDaoImplementation;
  *
  * @author Mikel
  */
-public class Application {
+public class Application extends Thread {
 
-    /**
-     * @param args the command line arguments
-     * @throws IOException
-     */
-    private static ServerSocket ss = null;
+    //static ServerSocket variable
+    private static ServerSocket server;
+    //socket server port on which it will listen
+    private static int port = 3333;
 
-    public static void main(String[] args) throws ClassNotFoundException, IOException {
-        ss = new ServerSocket(6666);
-        Socket socket = ss.accept();
-        ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
-        Message m = (Message) is.readObject();
-        System.out.println(m.getUser().getLogin());
-        System.out.println(m.getUser().getPassword());
-        socket.close();
+    public static void main(String args[]) throws IOException, ClassNotFoundException {
+        //create the socket server object
+        server = new ServerSocket(port);
+        //keep listens indefinitely until receives 'exit' call or program terminates
+        while (true) {
+            
+
+            //creating socket and waiting for client connection
+            Socket socket = server.accept();
+
+            //read from socket to ObjectInputStream object
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+            //convert ObjectInputStream object to Message
+            Message message = (Message) ois.readObject();
+            System.out.println("Message Received: " + "Nuevo objeto");
+
+            Worker worker = new Worker();
+            worker.setMessage(message);
+            worker.processMessage();
+
+            //create ObjectOutputStream object
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            //write object to Socket
+            oos.writeObject("Hi Client ");
+            //close resources
+            ois.close();
+            oos.close();
+            socket.close();
+            //terminate the server if client sends exit request
+            if (message.getType().equals(TypeMessage.STOP_SERVER)) {
+                break;
+            }
+        }
+        System.out.println("Shutting down Socket server!!");
+        //close the ServerSocket object
+        server.close();
     }
 }

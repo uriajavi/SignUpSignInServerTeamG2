@@ -5,10 +5,41 @@
  */
 package signupsignin.server;
 
+import interfaces.Signable;
+import message.Message;
+import message.TypeMessage;
+import signupsignin.server.Dao.DaoFactory;
+
 /**
  *
  * @author Mikel
  */
-public class Worker {
-    
+public class Worker extends Thread {
+
+    private Message message = null;
+
+    public Worker() {
+    }
+
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public void processMessage() {
+      this.start();
+    }
+
+    @Override
+    public void run() {
+         Signable dao = DaoFactory.getSignable("mysql");
+        switch (this.message.getType()) {
+            case SIGN_UP:
+                dao.signUp(this.message.getUser());
+                break;
+        } 
+    }
 }

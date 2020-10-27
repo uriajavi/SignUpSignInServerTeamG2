@@ -13,7 +13,7 @@ import interfaces.Signable;
  */
 public class DaoFactory {
 
-    private static final String MYSQL = "mysqñl";
+    private static final String MYSQL = "mysql";
 
     public static Signable getSignable(String type) {
         Signable signable = null;
