@@ -5,15 +5,23 @@
  */
 package signupsignin.server;
 
+import exceptions.ErrorClosingDatabaseResources;
+import exceptions.ErrorConnectingServerException;
+import exceptions.PasswordMissmatchException;
+import exceptions.UserNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import message.Message;
 import message.TypeMessage;
 import signupsignin.server.dao.MySQLDaoImplementation;
+import user.User;
 
 /**
  *
@@ -27,6 +35,27 @@ public class Application {
     private static int port = 3333;
 
     public static void main(String args[]) throws IOException, ClassNotFoundException {
+        /*User user = new User();
+        user.setLogin("DEMO");
+        user.setPassword("demo");
+        MySQLDaoImplementation dao = new MySQLDaoImplementation();
+        try {
+            user=dao.signIn(user);
+            System.out.println(user.getFullName());
+        } catch (ErrorConnectingServerException ex) {
+            System.out.println("Hijo puta");
+        } catch (UserNotFoundException ex) {
+            System.out.println("No está");
+        } catch (SQLException ex) {
+            System.out.println("NO CONECTA!");
+        } catch (PasswordMissmatchException ex) {
+            System.out.println("Error contraseña.");
+        } catch (ErrorClosingDatabaseResources ex) {
+            System.out.println("Fatal error.");
+        }
+        
+    }*/
+        
         //create the socket server object
         server = new ServerSocket(port);
         //keep listens indefinitely until receives 'exit' call or program terminates
