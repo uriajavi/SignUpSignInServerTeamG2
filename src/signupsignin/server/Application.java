@@ -19,7 +19,7 @@ import signupsignin.server.dao.MySQLDaoImplementation;
  *
  * @author Mikel
  */
-public class Application extends Thread {
+public class Application {
 
     //static ServerSocket variable
     private static ServerSocket server;

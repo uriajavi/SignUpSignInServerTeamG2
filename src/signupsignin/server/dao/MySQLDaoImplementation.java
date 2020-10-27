@@ -26,10 +26,19 @@ public class MySQLDaoImplementation implements Signable {
     @Override
     public User signIn(User user) {
 
+        /*Metodos a implementar:
+        - Usuario no existe (select no lanzará incorrecta)
+        - Password incorrecta (select sera incongruente)
+        - Error de conexión a BDA (probar a acceder sin conexión, a ver que excepcion salta)
+        - Hay que insertar la fecha actual en el lastacces, despues de obtener el último access. Un update 
+          y controlar la excepcion de inserción.
+        - 
+        */
         try {
             // Obtengo una conexión desde el pool de conexiones.
             con = ConnectionPool.getConnection();
 
+            
             //Establezco el preparedstatement y ejecuto la query.
             ps = con.prepareStatement(searchUser);
             ps.setString(1, user.getLogin());
