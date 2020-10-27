@@ -5,37 +5,46 @@
  */
 package signupsignin.server.Dao;
 
+import interfaces.Signable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import user.User;
 
 /**
  *
  * @author Imanol
  */
-public class MySQLDaoImplementation {
+public class MySQLDaoImplementation implements Signable {
 
     private PreparedStatement ps;
     private ResultSet rs;
     private Connection con;
+    private final String searchUser = "SELECT * FROM USER WHERE LOGIN=? AND PASSWORD=?";
+    
+
+    @Override
+    public User signIn(User user) {
+        try {   
 
     public void doQuery() {
         try {
             // Obtengo una conexión desde el pool de conexiones.
             con = ConnectionPool.getConnection();
-
-            //Establezco el preparedstatement y ejecuto la query. Preguntar ExecuteUpdate.
-            ps = con.prepareStatement("SELECT * FROM USER");
-            rs = ps.executeQuery();
-
-            //Compruebo que está todo correcto en la terminal, y que la query funciona.
+ 
+            //Establezco el preparedstatement y ejecuto la query.
+            ps = con.prepareStatement(searchUser);
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getPassword());
+            ResultSet rs= ps.executeQuery();
+            
+            //Guardo en el objeto User el nombre y el ultimo acceso para mostrar en dashboard
             while (rs.next()) {
-                System.out.println("Email: " + rs.getString("EMAIL"));
-            }
-
-            System.out.println("\n=====Releasing Connection Object To Pool=====\n");
-        } catch (SQLException sqlException) {
+                user.setFullName(rs.getString("FULLNAME"));
+                user.setLastAccess(rs.getDate("LASTACCESS"));
+            }         
+        } catch(SQLException sqlException) {
             sqlException.printStackTrace();
         } finally {
             try {
@@ -55,5 +64,13 @@ public class MySQLDaoImplementation {
                 sqlException.printStackTrace();
             }
         }
+        
+        //Devuelvo user
+        return user;
+    }
+
+    @Override
+    public User signUp(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

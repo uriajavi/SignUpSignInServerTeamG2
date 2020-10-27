@@ -7,6 +7,7 @@ package signupsignin.server.Dao;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 
@@ -17,15 +18,16 @@ import org.apache.commons.dbcp2.BasicDataSource;
 public class ConnectionPool {
 
     private static BasicDataSource ds = null;
+    private static final ResourceBundle rb = ResourceBundle.getBundle("config.config");
 
     public static DataSource getDataSource() {
         //FIXME: Valores establecidos a machete. Cambiar a archivo de propiedades.
         if (ds == null) {
             ds = new BasicDataSource();
-            ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            ds.setUsername("root");
-            ds.setPassword("");
-            ds.setUrl("jdbc:mysql://localhost:3306/signin_signup?autoReconnect=true&useSSL=false");
+            ds.setDriverClassName(rb.getString("driver"));
+            ds.setUsername(rb.getString("user"));
+            ds.setPassword(rb.getString("password"));
+            ds.setUrl(rb.getString("host"));
             //Establecer parametros adecuados
             ds.setMaxTotal(10);
             ds.setMaxWaitMillis(3000);
