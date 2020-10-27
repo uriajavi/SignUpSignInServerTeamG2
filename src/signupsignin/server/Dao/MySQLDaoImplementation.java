@@ -21,7 +21,8 @@ public class MySQLDaoImplementation implements Signable {
 
     @Override
     public User signUp(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Usuario registrado");
+        return null;
     }
     
 }

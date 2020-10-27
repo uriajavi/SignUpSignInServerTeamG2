@@ -5,16 +5,14 @@
  */
 package signupsignin.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import message.Message;
 import message.TypeMessage;
+
 
 /**
  *
@@ -32,22 +30,22 @@ public class Application extends Thread {
         server = new ServerSocket(port);
         //keep listens indefinitely until receives 'exit' call or program terminates
         while (true) {
-            System.out.println("Waiting for the client request");
             
+
             //creating socket and waiting for client connection
             Socket socket = server.accept();
-            
+
             //read from socket to ObjectInputStream object
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            
+
             //convert ObjectInputStream object to Message
             Message message = (Message) ois.readObject();
             System.out.println("Message Received: " + "Nuevo objeto");
-            
+
             Worker worker = new Worker();
             worker.setMessage(message);
-            
-            
+            worker.processMessage();
+
             //create ObjectOutputStream object
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             //write object to Socket
