@@ -38,7 +38,7 @@ public class Worker extends Thread {
          Signable dao = DaoFactory.getSignable("mysql");
         switch (this.message.getType()) {
             case SIGN_UP:
-                dao.signUp(this.message.getUser());
+                //dao.signUp(this.message.getUser());
                 break;
         } 
     }

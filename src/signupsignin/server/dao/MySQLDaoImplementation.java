@@ -6,6 +6,7 @@
 package signupsignin.server.dao;
 
 import exceptions.ErrorClosingDatabaseResources;
+import exceptions.ErrorConnectingDatabaseException;
 import exceptions.ErrorConnectingServerException;
 import exceptions.PasswordMissmatchException;
 import exceptions.UserNotFoundException;
@@ -35,7 +36,7 @@ public class MySQLDaoImplementation implements Signable {
     private final String insertAccess = "UPDATE USER SET LASTACCESS =? WHERE LOGIN=?";
 
     @Override
-    public User signIn(User user) throws ErrorConnectingServerException, UserNotFoundException, SQLException, PasswordMissmatchException, ErrorClosingDatabaseResources {
+    public User signIn(User user) throws ErrorConnectingDatabaseException, UserNotFoundException, PasswordMissmatchException, ErrorClosingDatabaseResources {
         try {
             // Obtengo una conexión desde el pool de conexiones.
             con = ConnectionPool.getConnection();
@@ -48,7 +49,7 @@ public class MySQLDaoImplementation implements Signable {
             ps.setString(1, user.getLogin());
             ps.setString(2, user.getPassword());
             ResultSet rs = ps.executeQuery();
-            
+
             //Controlo el error de la contraseña.
             if (!rs.next()) {
                 throw new PasswordMissmatchException();
@@ -56,12 +57,11 @@ public class MySQLDaoImplementation implements Signable {
             //Obtengo datos que voy a devolver al clente.
             user.setFullName(rs.getString("FULLNAME"));
             user.setLastAccess(rs.getDate("LASTACCESS"));
-            
+
             insertAccesTime(user);
-           
             //Control de error de conexión/query incorrecta.
         } catch (SQLException ex1) {
-            throw new ErrorConnectingServerException();
+            throw new ErrorConnectingDatabaseException();
         } finally {
             try {
                 // Cerrar ResulSet
@@ -92,35 +92,25 @@ public class MySQLDaoImplementation implements Signable {
         return null;
     }
 
-    private void checkUser(User user) throws ErrorConnectingServerException, UserNotFoundException {
-
-        try {
-            PreparedStatement ps = con.prepareStatement(checkUser);
-            ps.setString(1, user.getLogin());
-            ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
-                throw new UserNotFoundException();
-            }
-            rs.close();
-            ps.close();
-        } catch (SQLException ex3) {
-            throw new ErrorConnectingServerException();
+    private void checkUser(User user) throws UserNotFoundException, SQLException {
+        PreparedStatement ps = con.prepareStatement(checkUser);
+        ps.setString(1, user.getLogin());
+        ResultSet rs = ps.executeQuery();
+        if (!rs.next()) {
+            throw new UserNotFoundException();
         }
+        rs.close();
+        ps.close();
+
     }
 
-    private void insertAccesTime(User user) throws ErrorConnectingServerException {
-        //Falta conseguir introducir Date.
-        try {
-            java.sql.Date now = new java.sql.Date(System.currentTimeMillis());
-            PreparedStatement ps = con.prepareStatement(insertAccess);
-            ps.setDate(1, now);
-            ps.setString(2, user.getLogin());
-            ResultSet rs = ps.executeQuery();
-            rs.close();
-            ps.close();
-        } catch (SQLException ex3) {
-            throw new ErrorConnectingServerException();
-        }
+    private void insertAccesTime(User user) throws SQLException {
+        Date sqlDate = new Date(System.currentTimeMillis());
+        PreparedStatement ps = con.prepareStatement(insertAccess);
+        ps.setDate(1, sqlDate);
+        ps.setString(2, user.getLogin());
+        ps.executeUpdate();
+        ps.close();
     }
 
 }
