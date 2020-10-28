@@ -13,13 +13,12 @@ import java.net.Socket;
 
 import message.Message;
 import message.TypeMessage;
-import signupsignin.server.dao.MySQLDaoImplementation;
 
 /**
  *
  * @author Mikel
  */
-public class Application extends Thread {
+public class Application {
 
     //static ServerSocket variable
     private static ServerSocket server;
@@ -31,37 +30,11 @@ public class Application extends Thread {
         server = new ServerSocket(port);
         //keep listens indefinitely until receives 'exit' call or program terminates
         while (true) {
-            
-
             //creating socket and waiting for client connection
             Socket socket = server.accept();
-
-            //read from socket to ObjectInputStream object
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-
-            //convert ObjectInputStream object to Message
-            Message message = (Message) ois.readObject();
-            System.out.println("Message Received: " + "Nuevo objeto");
-
-            Worker worker = new Worker();
-            worker.setMessage(message);
-            worker.processMessage();
-
-            //create ObjectOutputStream object
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            //write object to Socket
-            oos.writeObject("Hi Client ");
-            //close resources
-            ois.close();
-            oos.close();
+            new Worker(socket).start();
             socket.close();
-            //terminate the server if client sends exit request
-            if (message.getType().equals(TypeMessage.STOP_SERVER)) {
-                break;
-            }
         }
-        System.out.println("Shutting down Socket server!!");
-        //close the ServerSocket object
-        server.close();
+
     }
 }
