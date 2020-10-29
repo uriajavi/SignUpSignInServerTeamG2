@@ -7,19 +7,15 @@ package signupsignin.server.dao;
 
 import exceptions.ErrorClosingDatabaseResources;
 import exceptions.ErrorConnectingDatabaseException;
-import exceptions.ErrorConnectingServerException;
 import exceptions.PasswordMissmatchException;
+import exceptions.QueryException;
 import exceptions.UserNotFoundException;
 import interfaces.Signable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import user.User;
 
 /**
@@ -36,7 +32,7 @@ public class MySQLDaoImplementation implements Signable {
     private final String insertAccess = "UPDATE USER SET LASTACCESS =? WHERE LOGIN=?";
 
     @Override
-    public User signIn(User user) throws ErrorConnectingDatabaseException, UserNotFoundException, PasswordMissmatchException, ErrorClosingDatabaseResources {
+    public User signIn(User user) throws ErrorConnectingDatabaseException, UserNotFoundException, PasswordMissmatchException, ErrorClosingDatabaseResources, QueryException {
         try {
             // Obtengo una conexión desde el pool de conexiones.
             con = ConnectionPool.getConnection();
@@ -48,7 +44,7 @@ public class MySQLDaoImplementation implements Signable {
             ps = con.prepareStatement(checkPassword);
             ps.setString(1, user.getLogin());
             ps.setString(2, user.getPassword());
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             //Controlo el error de la contraseña.
             if (!rs.next()) {
@@ -61,23 +57,11 @@ public class MySQLDaoImplementation implements Signable {
             insertAccesTime(user);
             //Control de error de conexión/query incorrecta.
         } catch (SQLException ex1) {
-            throw new ErrorConnectingDatabaseException();
+            throw new QueryException();
         } finally {
             try {
-                // Cerrar ResulSet
-                if (rs != null) {
-                    rs.close();
-                }
-                // Cerrar PreparedStatement
-                if (ps != null) {
-                    ps.close();
-                }
-                // Cerrar conexión recibida
-                if (con != null) {
-                    con.close();
-                }
-                //
-            } catch (SQLException ex2) {
+                closeConnection();
+            } catch (SQLException ex) {
                 throw new ErrorClosingDatabaseResources();
             }
         }
@@ -93,9 +77,9 @@ public class MySQLDaoImplementation implements Signable {
     }
 
     private void checkUser(User user) throws UserNotFoundException, SQLException {
-        PreparedStatement ps = con.prepareStatement(checkUser);
+        ps = con.prepareStatement(checkUser);
         ps.setString(1, user.getLogin());
-        ResultSet rs = ps.executeQuery();
+        rs = ps.executeQuery();
         if (!rs.next()) {
             throw new UserNotFoundException();
         }
@@ -111,6 +95,12 @@ public class MySQLDaoImplementation implements Signable {
         ps.setString(2, user.getLogin());
         ps.executeUpdate();
         ps.close();
+    }
+    
+     private void closeConnection() throws SQLException {
+        this.rs.close();
+        this.ps.close();
+        this.con.close();
     }
 
 }
