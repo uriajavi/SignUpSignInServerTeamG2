@@ -5,6 +5,7 @@
  */
 package signupsignin.server.dao;
 
+import exceptions.ErrorConnectingDatabaseException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -35,7 +36,11 @@ public class ConnectionPool {
         return ds;
     }
 
-    public static synchronized Connection getConnection() throws SQLException {
-        return getDataSource().getConnection();
+    public static synchronized Connection getConnection() throws ErrorConnectingDatabaseException {
+        try {
+            return getDataSource().getConnection();
+        } catch (SQLException ex) {
+            throw new ErrorConnectingDatabaseException();
+        }
     }
 }
