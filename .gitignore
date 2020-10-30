@@ -7,3 +7,6 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 *.class
+resources/config/config.properties
+nbproject/project.properties
+nbproject/project.properties
