@@ -62,15 +62,15 @@ public class Worker extends Thread {
                 case SIGN_UP: 
                     try {
                     User user = dao.signUp(this.message.getUser());
-                    Message message = new Message(user, TypeMessage.REGISTER_OK);
+                    message = new Message(user, TypeMessage.REGISTER_OK);
                 } catch (UserAlreadyExistException ex) {
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-                    Message message = new Message(this.message.getUser(), TypeMessage.USER_EXISTS);
+                    message = new Message(this.message.getUser(), TypeMessage.USER_EXISTS);
                 } catch (ErrorConnectingDatabaseException ex) {
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-                    Message message = new Message(this.message.getUser(), TypeMessage.DATABASE_ERROR);
+                    message = new Message(this.message.getUser(), TypeMessage.DATABASE_ERROR);
                 } catch (QueryException ex) {
-                    Message message = new Message(this.message.getUser(), TypeMessage.QUERY_ERROR);
+                    message = new Message(this.message.getUser(), TypeMessage.QUERY_ERROR);
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
@@ -104,7 +104,7 @@ public class Worker extends Thread {
         } finally {
             try {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                oos.writeObject("erfnerfiuerniuo");
+                oos.writeObject(this.message);
                 oos.close();
                 ois.close();
                 this.socket.close();
