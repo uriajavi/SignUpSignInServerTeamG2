@@ -11,7 +11,7 @@ import java.net.Socket;
 import exceptions.UserAlreadyExistException;
 
 /**
- *
+ * Application class.
  * @author Mikel
  */
 public class Application {
