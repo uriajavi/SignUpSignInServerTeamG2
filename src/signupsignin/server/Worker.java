@@ -7,6 +7,7 @@ package signupsignin.server;
 
 import exceptions.ErrorClosingDatabaseResources;
 import exceptions.ErrorConnectingDatabaseException;
+import exceptions.ErrorConnectingServerException;
 import exceptions.PasswordMissmatchException;
 import exceptions.QueryException;
 import exceptions.UserAlreadyExistException;
@@ -72,8 +73,11 @@ public class Worker extends Thread {
                 } catch (QueryException ex) {
                     message = new Message(this.message.getUser(), TypeMessage.QUERY_ERROR);
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ErrorConnectingServerException ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
+
                 case SIGN_IN: 
                     try {
                     User user = dao.signIn(this.message.getUser());
@@ -93,13 +97,14 @@ public class Worker extends Thread {
                 } catch (ErrorClosingDatabaseResources ex) {
                     Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                     message = new Message(this.message.getUser(), TypeMessage.STOP_SERVER);
+                } catch (ErrorConnectingServerException ex) {
+                    Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
+
             }
 
-        } catch (IOException ex) {
-            Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

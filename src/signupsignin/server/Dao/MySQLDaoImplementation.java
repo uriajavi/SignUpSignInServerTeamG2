@@ -37,8 +37,6 @@ public class MySQLDaoImplementation implements Signable {
     private final String insertAccess = "UPDATE USER SET LASTACCESS =? WHERE LOGIN=?";
     private final String checkIfUserExists = "SELECT * FROM USER WHERE LOGIN=? OR EMAIL=?";
 
-
-  
     @Override
     public User signIn(User user) throws ErrorConnectingDatabaseException, UserNotFoundException, PasswordMissmatchException, ErrorClosingDatabaseResources, QueryException {
         try {
@@ -78,9 +76,8 @@ public class MySQLDaoImplementation implements Signable {
         return user;
     }
 
-  
     @Override
-    public User signUp(User user) throws UserAlreadyExistException, QueryException,ErrorConnectingDatabaseException {
+    public User signUp(User user) throws UserAlreadyExistException, QueryException, ErrorConnectingDatabaseException {
         try {
             this.con = ConnectionPool.getConnection();
             this.checkifUserExists(user);
@@ -96,8 +93,15 @@ public class MySQLDaoImplementation implements Signable {
             this.closeConnection();
 
         } catch (SQLException ex) {
+
             ex.printStackTrace();
             throw new QueryException();
+        } finally {
+            try {
+                this.closeConnection();
+            } catch (SQLException ex) {
+                Logger.getLogger(MySQLDaoImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return user;
     }
@@ -115,7 +119,7 @@ public class MySQLDaoImplementation implements Signable {
 
     }
 
- private void checkUser(User user) throws UserNotFoundException, SQLException {
+    private void checkUser(User user) throws UserNotFoundException, SQLException {
         ps = con.prepareStatement(checkUser);
         ps.setString(1, user.getLogin());
         rs = ps.executeQuery();
