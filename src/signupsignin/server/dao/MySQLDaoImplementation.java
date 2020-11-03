@@ -126,9 +126,6 @@ public class MySQLDaoImplementation implements Signable {
         if (!rs.next()) {
             throw new UserNotFoundException();
         }
-        rs.close();
-        ps.close();
-
     }
 
     private void insertAccesTime(User user) throws SQLException {
